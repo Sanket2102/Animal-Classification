@@ -1,6 +1,22 @@
 import streamlit as st
+import requests
 
-st.write("Hello")
+from io import BytesIO
+
+
+from keras._tf_keras.keras.models import load_model  # TensorFlow is required for Keras to work
+from PIL import Image, ImageOps  # Install pillow instead of PIL
+import numpy as np
+
+st.write("# Animal Classification (Cats :cat: vs Dogs :dog:)")
+url = "https://media.istockphoto.com/id/1501348253/photo/golden-retriever-and-british-shorthair-cat-lying-together-under-blanket.webp?b=1&s=170667a&w=0&k=20&c=xkZG8SuK0fhVQ-TZzwu9iR9Rh8OcpMBIqcThhSkv-ZA="
+
+response = requests.get(url)
+response.raise_for_status()  # Ensure we got a valid response
+img = Image.open(BytesIO(response.content))
+
+st.write(img)
+st.write('''I developed a web application that utilizes a machine learning model to classify images of cats and dogs. This application allows users to upload images, which are then processed by a pre-trained model to determine whether the image is of a cat or a dog. The model was trained using Google Teachable Machine with a diverse set of labeled cat and dog images to ensure high accuracy. The user-friendly interface of the app makes it easy for users to interact with the model and receive instant predictions. This project showcases the practical application of machine learning in image classification, providing a seamless and efficient tool for users to differentiate between cat and dog images.''')
 
 import tensorflow as tf
 from tensorflow.keras.models import load_model
@@ -19,12 +35,8 @@ custom_objects = {'DepthwiseConv2D': CustomDepthwiseConv2D}
 # Load the model
 model = load_model('keras_model.h5', custom_objects=custom_objects)
 
-# Print TensorFlow version
-st.write(f'TensorFlow version: {tf.__version__}')
 
-from keras._tf_keras.keras.models import load_model  # TensorFlow is required for Keras to work
-from PIL import Image, ImageOps  # Install pillow instead of PIL
-import numpy as np
+
 
 # Disable scientific notation for clarity
 np.set_printoptions(suppress=True)
@@ -36,6 +48,11 @@ class_names = open("labels.txt", "r").readlines()
 # The 'length' or number of images you can put into the array is
 # determined by the first position in the shape tuple, in this case 1
 data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
+
+
+with st.expander("To download test data for checking the model, click here"):
+    # drive link for downloading test dataset
+    st.write("Download here- https://drive.google.com/drive/u/2/folders/1w8xAM3aoF6ceUvbBtWShayvN9w0biFnp")
 
 uploaded_files = st.file_uploader("Choose an image...", accept_multiple_files=False, type=["jpg", "jpeg", "png"])
 
