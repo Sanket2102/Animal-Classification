@@ -79,5 +79,5 @@ if uploaded_files:
     confidence_score = prediction[0][index]
 
     # Print prediction and confidence score
-    st.write("Class:", class_name[2:], end="")
+    st.write("Class:", class_name[2:])
     st.write("Confidence Score:", confidence_score)
